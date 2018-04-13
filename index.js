@@ -1,21 +1,15 @@
-'use strict';
+var http = require('http'),
+    httpProxy = require('http-proxy');
+// 
+// Create your proxy server and set the target in the options. 
+// 
+httpProxy.createProxyServer({target:'http://localhost:9000'}).listen(8000); // See (†) 
 
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import {
-    AppRegistry
-} from 'react-native';
-
-import Route from './app/Route';
-//import Page from './app/components/MainPage/MainPage';
-
-export default class YourHour extends Component {
-    render() {
-        return (
-            <Route/>
-        );
-    }
-}
-
-AppRegistry.registerComponent('YourHour', () => YourHour);
-module.exports = YourHour;
+// 
+// Create your target server 
+// 
+http.createServer(function (req, res) {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.write('request successfully proxied!' + '\n' + JSON.stringify(req.headers, true, 2));
+    res.end();
+}).listen(9000);
